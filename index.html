@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HEARTREVIVER</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Fairytale font kit -->
+  <link rel="stylesheet" href="https://use.typekit.net/yyy7lby.css">
+  <style>
+    :root {
+      --bg-color: #050608;
+      --gold: #f8d27a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #12202b 0%, #050608 55%, #020203 100%);
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .scene {
+      text-align: center;
+    }
+
+    .crystal-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .crystal-ball {
+      display: block;
+      width: 520px;       /* tuned for Crystal Ball.png proportion */
+      max-width: 90vw;
+      height: auto;
+    }
+
+    .stand-label {
+      position: absolute;
+      left: 50%;
+      bottom: 7.5%;       /* nudged to sit on the nameplate */
+      transform: translateX(-50%);
+      font-family: "fairy-tale-jf", sans-serif;
+      font-size: 38px;
+      letter-spacing: 0.28em;
+      color: #fdf3c2;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 0, 0, 0.7);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .controls {
+      margin-top: 28px;
+    }
+
+    .play-pause {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid #a47417;
+      background: radial-gradient(circle at 30% 20%, #ffe8a8, #f0b43a, #9e6b13);
+      box-shadow:
+        0 0 14px rgba(0, 0, 0, 0.7),
+        0 0 20px rgba(248, 210, 122, 0.7);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .play-pause:focus-visible {
+      box-shadow:
+        0 0 0 3px #ffffff,
+        0 0 20px rgba(248, 210, 122, 0.8);
+    }
+
+    /* Default: playing state → show pause icon (two bars) */
+    .play-pause-icon {
+      width: 22px;
+      height: 28px;
+      position: relative;
+    }
+
+    .play-pause-icon::before,
+    .play-pause-icon::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 7px;
+      height: 100%;
+      background: #4a2a05;
+      border-radius: 2px;
+    }
+
+    .play-pause-icon::before {
+      left: 0;
+    }
+
+    .play-pause-icon::after {
+      right: 0;
+    }
+
+    /* When button has .paused, show the triangle play icon instead */
+    .play-pause.paused .play-pause-icon {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 14px 0 14px 24px;
+      border-color: transparent transparent transparent #4a2a05;
+    }
+
+    .play-pause.paused .play-pause-icon::before,
+    .play-pause.paused .play-pause-icon::after {
+      content: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <div class="crystal-wrapper">
+      <img src="Crystal Ball.png" alt="Heartreviver crystal ball" class="crystal-ball">
+      <div class="stand-label tk-fairy-tale-jf">HEARTREVIVER</div>
+    </div>
+
+    <div class="controls">
+      <button class="play-pause" aria-label="Pause Heartreviver">
+        <div class="play-pause-icon"></div>
+      </button>
+    </div>
+  </main>
+
+  <script>
+    // Placeholder: animation + play/pause wiring will go here.
+    // For now this just toggles the visual state of the button.
+    const playPauseButton = document.querySelector('.play-pause');
+
+    playPauseButton.addEventListener('click', () => {
+      const isPaused = playPauseButton.classList.toggle('paused');
+      playPauseButton.setAttribute(
+        'aria-label',
+        isPaused ? 'Play Heartreviver' : 'Pause Heartreviver'
+      );
+    });
+  </script>
+</body>
+</html>
