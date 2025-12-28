@@ -36,14 +36,29 @@
       display: inline-block;
     }
 
+    /* Larger, more responsive ball */
     .crystal-ball {
       display: block;
-      width: 520px;
-      max-width: 90vw;
+      width: min(70vmin, 640px);  /* scales with viewport, capped on large screens */
       height: auto;
+      filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.8));
     }
 
-    /* Container where foil PNGs will go later */
+    /* Hover glow ring under the ball */
+    .ball-glow {
+      position: absolute;
+      left: 50%;
+      bottom: -4%;
+      transform: translateX(-50%);
+      width: 55%;
+      max-width: 380px;
+      height: 28px;
+      background: radial-gradient(ellipse at center, rgba(120, 255, 210, 0.55), transparent 70%);
+      opacity: 0.75;
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
     .foil-layer {
       position: absolute;
       inset: 0;
@@ -52,65 +67,68 @@
     }
 
     .controls {
-      margin-top: 32px;
+      margin-top: 40px;
       display: flex;
       justify-content: center;
     }
 
-    /* Magic wand pause/play control */
+    /* Floating angled magic wand */
     .wand-button {
       position: relative;
-      width: 220px;
-      height: 40px;
+      width: 190px;
+      height: 64px;
       cursor: pointer;
       background: none;
       border: none;
       padding: 0;
+      transform: rotate(-18deg);
+      transform-origin: center;
+      animation: wand-bob 3.2s ease-in-out infinite;
+    }
+
+    .wand-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .wand-handle {
+      width: 48px;
+      height: 22px;
+      background: radial-gradient(circle at 25% 15%, #b67229, #3a1f05);
+      border-radius: 14px 18px 18px 14px;
+      box-shadow:
+        0 0 6px rgba(0, 0, 0, 0.8),
+        inset 0 0 4px rgba(255, 255, 255, 0.25);
+      margin-right: 6px;
     }
 
     .wand-shaft {
-      position: absolute;
-      left: 15%;
-      right: 10%;
-      top: 50%;
-      height: 8px;
-      transform: translateY(-50%);
+      flex: 1;
+      height: 7px;
       background: linear-gradient(90deg, #5c3b08, #f8d27a, #5c3b08);
       border-radius: 999px;
       box-shadow:
         0 0 8px rgba(0, 0, 0, 0.6),
         0 0 6px rgba(248, 210, 122, 0.7);
-    }
-
-    .wand-handle {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 40px;
-      height: 18px;
-      transform: translateY(-50%);
-      background: radial-gradient(circle at 30% 20%, #8b5b1a, #3a1f05);
-      border-radius: 12px 18px 18px 12px;
-      box-shadow:
-        0 0 6px rgba(0, 0, 0, 0.8),
-        inset 0 0 4px rgba(255, 255, 255, 0.2);
+      margin-right: 6px;
     }
 
     .wand-tip {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      width: 32px;
-      height: 32px;
-      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 20%, #fff7cf, #ffd45a, #e9961a);
       box-shadow:
-        0 0 10px rgba(255, 213, 99, 0.9),
-        0 0 22px rgba(255, 213, 99, 0.7);
+        0 0 12px rgba(255, 213, 99, 0.9),
+        0 0 28px rgba(255, 213, 99, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
+      animation: tip-pulse 2.4s ease-in-out infinite;
     }
 
     .wand-glyph {
@@ -118,10 +136,10 @@
       height: 0;
     }
 
-    /* Default: playing → show pause icon inside wand tip */
+    /* Playing → pause icon */
     .wand-button:not(.paused) .wand-glyph {
-      width: 18px;
-      height: 20px;
+      width: 16px;
+      height: 18px;
       position: relative;
     }
 
@@ -130,7 +148,7 @@
       content: "";
       position: absolute;
       top: 0;
-      width: 6px;
+      width: 5px;
       height: 100%;
       background: #4a2a05;
       border-radius: 2px;
@@ -144,18 +162,48 @@
       right: 0;
     }
 
-    /* Paused → show play triangle */
+    /* Paused → play triangle */
     .wand-button.paused .wand-glyph {
       width: 0;
       height: 0;
       border-style: solid;
-      border-width: 10px 0 10px 18px;
+      border-width: 9px 0 9px 16px;
       border-color: transparent transparent transparent #4a2a05;
     }
 
     .wand-button:focus-visible {
       outline: 2px solid #ffffff;
-      outline-offset: 4px;
+      outline-offset: 6px;
+    }
+
+    /* Wand bobbing animation */
+    @keyframes wand-bob {
+      0%, 100% { transform: translateY(0) rotate(-18deg); }
+      50%      { transform: translateY(-5px) rotate(-20deg); }
+    }
+
+    /* Wand tip pulsing glow */
+    @keyframes tip-pulse {
+      0%, 100% {
+        box-shadow:
+          0 0 10px rgba(255, 213, 99, 0.8),
+          0 0 22px rgba(255, 213, 99, 0.6);
+      }
+      50% {
+        box-shadow:
+          0 0 16px rgba(255, 235, 150, 1),
+          0 0 32px rgba(255, 235, 150, 0.9);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        margin-top: 28px;
+      }
+      .wand-button {
+        width: 160px;
+        height: 56px;
+      }
     }
   </style>
 </head>
@@ -163,36 +211,34 @@
   <main class="scene">
     <div class="crystal-wrapper">
       <img src="Crystal Ball.png" alt="Heartreviver crystal ball" class="crystal-ball">
-
-      <!-- Foils will be injected here later -->
+      <div class="ball-glow"></div>
       <div class="foil-layer" aria-hidden="true"></div>
     </div>
 
     <div class="controls">
       <button class="wand-button" aria-label="Pause Heartreviver">
-        <div class="wand-handle"></div>
-        <div class="wand-shaft"></div>
-        <div class="wand-tip">
-          <div class="wand-glyph"></div>
+        <div class="wand-inner">
+          <div class="wand-handle"></div>
+          <div class="wand-shaft"></div>
+          <div class="wand-tip">
+            <div class="wand-glyph"></div>
+          </div>
         </div>
       </button>
     </div>
   </main>
 
   <script>
-    // ===== TIMING STUBS FOR FOIL CYCLE =====
-    // Durations in milliseconds
-    const FLOAT_DURATION = 7000;  // 7 seconds floating
-    const FOCUS_DURATION = 3000;  // 3 seconds in focus
-    const CYCLE_DURATION = FLOAT_DURATION + FOCUS_DURATION; // 10 seconds
+    const FLOAT_DURATION = 7000;
+    const FOCUS_DURATION = 3000;
+    const CYCLE_DURATION = FLOAT_DURATION + FOCUS_DURATION;
 
     const wandButton = document.querySelector('.wand-button');
     let isPaused = false;
     let cycleStartTime = performance.now();
     let animationFrameId = null;
 
-    // Placeholder: future foils array
-    const foilImages = []; // e.g. ['foil-01.png', ..., 'foil-75.png']
+    const foilImages = []; // future: ['foil-01.png', ..., 'foil-75.png']
 
     function startLoop() {
       cycleStartTime = performance.now();
@@ -218,23 +264,19 @@
       const elapsed = now - cycleStartTime;
       const t = elapsed % CYCLE_DURATION;
 
-      // TODO: when foils are wired in:
-      // if (t < FLOAT_DURATION) { show floating state }
-      // else { show focused-foil state }
+      // TODO: hook t into foil states
 
       animationFrameId = requestAnimationFrame(tick);
     }
 
     wandButton.addEventListener('click', () => {
       if (isPaused) {
-        // Restart loop from the same phase for now
         startLoop();
       } else {
         pauseLoop();
       }
     });
 
-    // Auto-start on load
     startLoop();
   </script>
 </body>
