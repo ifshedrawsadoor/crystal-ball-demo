@@ -44,44 +44,29 @@
       height: auto;
     }
 
-    .stand-label {
+    /* SVG overlay for curved text */
+    .stand-text-svg {
       position: absolute;
       left: 50%;
-      bottom: 7.5%;
+      bottom: 4.5%;     /* tune this so the text sits right on the metal band */
       transform: translateX(-50%);
-      font-family: "fairy-tale-jf", serif;
-      font-size: 38px;
-      letter-spacing: 0.28em;
-      color: #fdf3c2;
-      text-shadow:
-        0 0 4px rgba(0, 0, 0, 0.8),
-        0 0 10px rgba(0, 0, 0, 0.7);
-      white-space: nowrap;
+      width: 420px;     /* should roughly match the width of the nameplate on the stand */
+      height: 120px;
+      overflow: visible;
       pointer-events: none;
     }
 
-    .stand-label span {
-      display: inline-block;
+    .stand-text-svg text {
+      font-family: "fairy-tale-jf", serif;
+      font-size: 38px;
+      letter-spacing: 0.28em;
+      fill: #fdf3c2;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 0, 0, 0.7);
+      dominant-baseline: middle;
+      text-anchor: middle;
     }
-
-    /* Gentle arc: tweak values to match your base curve */
-    .stand-label span:nth-child(1),
-    .stand-label span:nth-child(12) { transform: translateY(6px); }
-
-    .stand-label span:nth-child(2),
-    .stand-label span:nth-child(11) { transform: translateY(4px); }
-
-    .stand-label span:nth-child(3),
-    .stand-label span:nth-child(10) { transform: translateY(2px); }
-
-    .stand-label span:nth-child(4),
-    .stand-label span:nth-child(9)  { transform: translateY(1px); }
-
-    .stand-label span:nth-child(5),
-    .stand-label span:nth-child(8)  { transform: translateY(0); }
-
-    .stand-label span:nth-child(6),
-    .stand-label span:nth-child(7)  { transform: translateY(-1px); }
 
     .controls {
       margin-top: 28px;
@@ -154,10 +139,20 @@
   <main class="scene">
     <div class="crystal-wrapper">
       <img src="Crystal Ball.png" alt="Heartreviver crystal ball" class="crystal-ball">
-      <div class="stand-label tk-fairy-tale-jf" aria-label="HEARTREVIVER">
-        <span>H</span><span>E</span><span>A</span><span>R</span><span>T</span>
-        <span>R</span><span>E</span><span>V</span><span>I</span><span>V</span><span>E</span><span>R</span>
-      </div>
+
+      <!-- Curved HEARTREVIVER text that hugs the stand -->
+      <svg class="stand-text-svg" viewBox="0 0 420 120" aria-hidden="true">
+        <!-- Arc path: adjust control points if you want more/less curve -->
+        <path id="stand-arc"
+              d="M 30 90
+                 Q 210 120 390 90"
+              fill="none" />
+        <text dy="-6">
+          <textPath href="#stand-arc" startOffset="50%">
+            HEARTREVIVER
+          </textPath>
+        </text>
+      </svg>
     </div>
 
     <div class="controls">
