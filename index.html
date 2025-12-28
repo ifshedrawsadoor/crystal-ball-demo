@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>HEARTREVIVER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Fairytale font kit -->
   <link rel="stylesheet" href="https://use.typekit.net/yyy7lby.css">
   <style>
     :root {
@@ -44,95 +43,119 @@
       height: auto;
     }
 
-    /* SVG for HEARTREVIVER inlay on front band */
-    .stand-text-svg {
+    /* Container where foil PNGs will go later */
+    .foil-layer {
       position: absolute;
-      left: 50%;
-      bottom: 9%;         /* this is the only value you should need to tweak */
-      transform: translateX(-50%);
-      width: 360px;       /* narrower than the full plate, to live in the brightest center */
-      height: 120px;
-      overflow: visible;
+      inset: 0;
       pointer-events: none;
-    }
-
-    .stand-text-svg text {
-      font-family: "fairy-tale-jf", serif;
-      font-size: 34px;
-      letter-spacing: 0.24em;
-      fill: #fdf3c2;
-      /* carve/glow combo */
-      stroke: rgba(0, 0, 0, 0.85);
-      stroke-width: 1.3;
-      paint-order: stroke fill;
-      dominant-baseline: middle;
-      text-anchor: middle;
+      overflow: visible;
     }
 
     .controls {
-      margin-top: 28px;
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
     }
 
-    .play-pause {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 2px solid #a47417;
-      background: radial-gradient(circle at 30% 20%, #ffe8a8, #f0b43a, #9e6b13);
+    /* Magic wand pause/play control */
+    .wand-button {
+      position: relative;
+      width: 220px;
+      height: 40px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .wand-shaft {
+      position: absolute;
+      left: 15%;
+      right: 10%;
+      top: 50%;
+      height: 8px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg, #5c3b08, #f8d27a, #5c3b08);
+      border-radius: 999px;
       box-shadow:
-        0 0 14px rgba(0, 0, 0, 0.7),
-        0 0 20px rgba(248, 210, 122, 0.7);
-      display: inline-flex;
+        0 0 8px rgba(0, 0, 0, 0.6),
+        0 0 6px rgba(248, 210, 122, 0.7);
+    }
+
+    .wand-handle {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 40px;
+      height: 18px;
+      transform: translateY(-50%);
+      background: radial-gradient(circle at 30% 20%, #8b5b1a, #3a1f05);
+      border-radius: 12px 18px 18px 12px;
+      box-shadow:
+        0 0 6px rgba(0, 0, 0, 0.8),
+        inset 0 0 4px rgba(255, 255, 255, 0.2);
+    }
+
+    .wand-tip {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 32px;
+      height: 32px;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #fff7cf, #ffd45a, #e9961a);
+      box-shadow:
+        0 0 10px rgba(255, 213, 99, 0.9),
+        0 0 22px rgba(255, 213, 99, 0.7);
+      display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      outline: none;
     }
 
-    .play-pause:focus-visible {
-      box-shadow:
-        0 0 0 3px #ffffff,
-        0 0 20px rgba(248, 210, 122, 0.8);
+    .wand-glyph {
+      width: 0;
+      height: 0;
     }
 
-    /* Default (playing): show pause icon */
-    .play-pause-icon {
-      width: 22px;
-      height: 28px;
+    /* Default: playing → show pause icon inside wand tip */
+    .wand-button:not(.paused) .wand-glyph {
+      width: 18px;
+      height: 20px;
       position: relative;
     }
 
-    .play-pause-icon::before,
-    .play-pause-icon::after {
+    .wand-button:not(.paused) .wand-glyph::before,
+    .wand-button:not(.paused) .wand-glyph::after {
       content: "";
       position: absolute;
       top: 0;
-      width: 7px;
+      width: 6px;
       height: 100%;
       background: #4a2a05;
       border-radius: 2px;
     }
 
-    .play-pause-icon::before {
+    .wand-button:not(.paused) .wand-glyph::before {
       left: 0;
     }
 
-    .play-pause-icon::after {
+    .wand-button:not(.paused) .wand-glyph::after {
       right: 0;
     }
 
-    /* When paused: show triangle play icon */
-    .play-pause.paused .play-pause-icon {
+    /* Paused → show play triangle */
+    .wand-button.paused .wand-glyph {
       width: 0;
       height: 0;
       border-style: solid;
-      border-width: 14px 0 14px 24px;
+      border-width: 10px 0 10px 18px;
       border-color: transparent transparent transparent #4a2a05;
     }
 
-    .play-pause.paused .play-pause-icon::before,
-    .play-pause.paused .play-pause-icon::after {
-      content: none;
+    .wand-button:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 4px;
     }
   </style>
 </head>
@@ -141,38 +164,78 @@
     <div class="crystal-wrapper">
       <img src="Crystal Ball.png" alt="Heartreviver crystal ball" class="crystal-ball">
 
-      <!-- HEARTREVIVER as engraved inlay, slightly arced -->
-      <svg class="stand-text-svg" viewBox="0 0 360 120" aria-hidden="true">
-        <!-- Gentle downward curve (you can deepen/shallow this later) -->
-        <path id="stand-arc"
-              d="M 20 60
-                 Q 180 95 340 60"
-              fill="none" />
-        <text dy="-4">
-          <textPath href="#stand-arc" startOffset="50%">
-            HEARTREVIVER
-          </textPath>
-        </text>
-      </svg>
+      <!-- Foils will be injected here later -->
+      <div class="foil-layer" aria-hidden="true"></div>
     </div>
 
     <div class="controls">
-      <button class="play-pause" aria-label="Pause Heartreviver">
-        <div class="play-pause-icon"></div>
+      <button class="wand-button" aria-label="Pause Heartreviver">
+        <div class="wand-handle"></div>
+        <div class="wand-shaft"></div>
+        <div class="wand-tip">
+          <div class="wand-glyph"></div>
+        </div>
       </button>
     </div>
   </main>
 
   <script>
-    const playPauseButton = document.querySelector('.play-pause');
+    // ===== TIMING STUBS FOR FOIL CYCLE =====
+    // Durations in milliseconds
+    const FLOAT_DURATION = 7000;  // 7 seconds floating
+    const FOCUS_DURATION = 3000;  // 3 seconds in focus
+    const CYCLE_DURATION = FLOAT_DURATION + FOCUS_DURATION; // 10 seconds
 
-    playPauseButton.addEventListener('click', () => {
-      const isPaused = playPauseButton.classList.toggle('paused');
-      playPauseButton.setAttribute(
-        'aria-label',
-        isPaused ? 'Play Heartreviver' : 'Pause Heartreviver'
-      );
+    const wandButton = document.querySelector('.wand-button');
+    let isPaused = false;
+    let cycleStartTime = performance.now();
+    let animationFrameId = null;
+
+    // Placeholder: future foils array
+    const foilImages = []; // e.g. ['foil-01.png', ..., 'foil-75.png']
+
+    function startLoop() {
+      cycleStartTime = performance.now();
+      isPaused = false;
+      wandButton.classList.remove('paused');
+      wandButton.setAttribute('aria-label', 'Pause Heartreviver');
+      animationFrameId = requestAnimationFrame(tick);
+    }
+
+    function pauseLoop() {
+      isPaused = true;
+      wandButton.classList.add('paused');
+      wandButton.setAttribute('aria-label', 'Play Heartreviver');
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+    }
+
+    function tick(now) {
+      if (isPaused) return;
+
+      const elapsed = now - cycleStartTime;
+      const t = elapsed % CYCLE_DURATION;
+
+      // TODO: when foils are wired in:
+      // if (t < FLOAT_DURATION) { show floating state }
+      // else { show focused-foil state }
+
+      animationFrameId = requestAnimationFrame(tick);
+    }
+
+    wandButton.addEventListener('click', () => {
+      if (isPaused) {
+        // Restart loop from the same phase for now
+        startLoop();
+      } else {
+        pauseLoop();
+      }
     });
+
+    // Auto-start on load
+    startLoop();
   </script>
 </body>
 </html>
