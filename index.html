@@ -44,28 +44,29 @@
       height: auto;
     }
 
-    /* SVG overlay for curved HEARTREVIVER text on the stand */
+    /* SVG for HEARTREVIVER inlay on front band */
     .stand-text-svg {
       position: absolute;
       left: 50%;
-      bottom: 6%;        /* tweak to sit exactly on your metal plate */
+      bottom: 9%;         /* this is the only value you should need to tweak */
       transform: translateX(-50%);
-      width: 420px;
-      height: 140px;
+      width: 360px;       /* narrower than the full plate, to live in the brightest center */
+      height: 120px;
       overflow: visible;
       pointer-events: none;
     }
 
     .stand-text-svg text {
       font-family: "fairy-tale-jf", serif;
-      font-size: 38px;
-      letter-spacing: 0.28em;
+      font-size: 34px;
+      letter-spacing: 0.24em;
       fill: #fdf3c2;
+      /* carve/glow combo */
+      stroke: rgba(0, 0, 0, 0.85);
+      stroke-width: 1.3;
+      paint-order: stroke fill;
       dominant-baseline: middle;
       text-anchor: middle;
-      paint-order: stroke fill;
-      stroke: rgba(0, 0, 0, 0.75);
-      stroke-width: 1.4;
     }
 
     .controls {
@@ -140,12 +141,12 @@
     <div class="crystal-wrapper">
       <img src="Crystal Ball.png" alt="Heartreviver crystal ball" class="crystal-ball">
 
-      <!-- Curved HEARTREVIVER text that hugs the stand -->
-      <svg class="stand-text-svg" viewBox="0 0 420 140" aria-hidden="true">
-        <!-- Downward-bowing arc along the stand -->
+      <!-- HEARTREVIVER as engraved inlay, slightly arced -->
+      <svg class="stand-text-svg" viewBox="0 0 360 120" aria-hidden="true">
+        <!-- Gentle downward curve (you can deepen/shallow this later) -->
         <path id="stand-arc"
-              d="M 20 80
-                 Q 210 120 400 80"
+              d="M 20 60
+                 Q 180 95 340 60"
               fill="none" />
         <text dy="-4">
           <textPath href="#stand-arc" startOffset="50%">
