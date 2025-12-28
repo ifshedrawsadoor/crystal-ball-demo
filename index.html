@@ -39,7 +39,7 @@
 
     .crystal-ball {
       display: block;
-      width: 520px;       /* tuned for Crystal Ball.png proportion */
+      width: 520px;
       max-width: 90vw;
       height: auto;
     }
@@ -47,9 +47,9 @@
     .stand-label {
       position: absolute;
       left: 50%;
-      bottom: 7.5%;       /* nudged to sit on the nameplate */
+      bottom: 7.5%;
       transform: translateX(-50%);
-      font-family: "fairy-tale-jf", sans-serif;
+      font-family: "fairy-tale-jf", serif;
       font-size: 38px;
       letter-spacing: 0.28em;
       color: #fdf3c2;
@@ -59,6 +59,29 @@
       white-space: nowrap;
       pointer-events: none;
     }
+
+    .stand-label span {
+      display: inline-block;
+    }
+
+    /* Gentle arc: tweak values to match your base curve */
+    .stand-label span:nth-child(1),
+    .stand-label span:nth-child(12) { transform: translateY(6px); }
+
+    .stand-label span:nth-child(2),
+    .stand-label span:nth-child(11) { transform: translateY(4px); }
+
+    .stand-label span:nth-child(3),
+    .stand-label span:nth-child(10) { transform: translateY(2px); }
+
+    .stand-label span:nth-child(4),
+    .stand-label span:nth-child(9)  { transform: translateY(1px); }
+
+    .stand-label span:nth-child(5),
+    .stand-label span:nth-child(8)  { transform: translateY(0); }
+
+    .stand-label span:nth-child(6),
+    .stand-label span:nth-child(7)  { transform: translateY(-1px); }
 
     .controls {
       margin-top: 28px;
@@ -86,7 +109,7 @@
         0 0 20px rgba(248, 210, 122, 0.8);
     }
 
-    /* Default: playing state → show pause icon (two bars) */
+    /* Default (playing): show pause icon */
     .play-pause-icon {
       width: 22px;
       height: 28px;
@@ -112,7 +135,7 @@
       right: 0;
     }
 
-    /* When button has .paused, show the triangle play icon instead */
+    /* When paused: show triangle play icon */
     .play-pause.paused .play-pause-icon {
       width: 0;
       height: 0;
@@ -131,7 +154,10 @@
   <main class="scene">
     <div class="crystal-wrapper">
       <img src="Crystal Ball.png" alt="Heartreviver crystal ball" class="crystal-ball">
-      <div class="stand-label tk-fairy-tale-jf">HEARTREVIVER</div>
+      <div class="stand-label tk-fairy-tale-jf" aria-label="HEARTREVIVER">
+        <span>H</span><span>E</span><span>A</span><span>R</span><span>T</span>
+        <span>R</span><span>E</span><span>V</span><span>I</span><span>V</span><span>E</span><span>R</span>
+      </div>
     </div>
 
     <div class="controls">
@@ -142,8 +168,6 @@
   </main>
 
   <script>
-    // Placeholder: animation + play/pause wiring will go here.
-    // For now this just toggles the visual state of the button.
     const playPauseButton = document.querySelector('.play-pause');
 
     playPauseButton.addEventListener('click', () => {
